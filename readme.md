@@ -4,7 +4,7 @@ Tarefa de programaço paralela
 # TODO
 - [ ] Fazer Tangente
 
-- [ ] Colocar timer
+- [x] Colocar timer
 
 - [ ] Melhor prints
 

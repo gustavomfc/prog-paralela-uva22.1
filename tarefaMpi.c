@@ -3,7 +3,13 @@
 #include <mpi.h>
 #include <assert.h>
 #include <math.h>
+#include <sys/time.h>
 #include <time.h>
+
+float time_diff(struct timeval *start, struct timeval *end)
+{
+    return (end->tv_sec - start->tv_sec) + 1e-6*(end->tv_usec - start->tv_usec);
+}
 
 signed long long fatorial(long x)
 {
@@ -69,6 +75,10 @@ double coss(double x, int iterations, int startIteration, int endIteration)
 
 int main(int argc, char **argv)
 {
+    struct timeval start;
+    struct timeval end;
+    gettimeofday(&start, NULL);
+
     if (argc != 2)
     {
         fprintf(stderr, "Uso: Numero de iterações\n");
@@ -106,7 +116,9 @@ int main(int argc, char **argv)
 
     // Print the result
     if (world_rank == 0)
-    {
+    {   
+        gettimeofday(&end, NULL);
+        printf("Tempo gasto: %0.8f sec\n", time_diff(&start, &end));
         printf("Total Sen = %f\n", sen_global_sum);
         printf("Total Cos = %f\n", cos_global_sum);
     }
