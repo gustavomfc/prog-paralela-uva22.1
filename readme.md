@@ -2,11 +2,11 @@
 Tarefa de programaço paralela
 
 # TODO
-[] Fazer Tangente
+- [ ] Fazer Tangente
 
-[] Colocar timer
+- [ ] Colocar timer
 
-[] Melhor prints
+- [ ] Melhor prints
 
 # Como usar
 Tarefa Serial
