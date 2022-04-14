@@ -66,7 +66,6 @@ double coss(double x, int iterations, int startIteration, int endIteration)
             signed long long  demoninador = fatorial(factor);
             sum = sum + ((aux * numerador) / demoninador);
         }
-
         aux = -aux;
         incrementor += 1;
     }
@@ -97,12 +96,14 @@ int main(int argc, char **argv)
     int iterationsPerProc = iterations / world_size;
     int startIter = world_rank * iterationsPerProc;
     int endIter = (world_rank + 1) * iterationsPerProc;
-    double summSeno = seno(0.5235987755982988, iterations, startIter, endIter);
+    double angle = 0.5235987755982988;
 
-    double summCoss = coss(0.5235987755982988, iterations, startIter, endIter);
+    double summSeno = seno(angle, iterations, startIter, endIter);
+
+    double summCoss = coss(angle, iterations, startIter, endIter);
 
     // Print the random numbers on each process
-    printf("[Process %d] Start Iter: %d End Iter: %d Seno Soma: %f Cos Soma: %f\n",
+    printf("[Process %d] Start Iter: %d End Iter: %d Seno Soma: %.10f Cos Soma: %.10f\n",
             world_rank, startIter, endIter, summSeno, summCoss);
 
     // Reduce all of the local sums into the global sum
@@ -119,8 +120,21 @@ int main(int argc, char **argv)
     {   
         gettimeofday(&end, NULL);
         printf("Tempo gasto: %0.8f sec\n", time_diff(&start, &end));
-        printf("Total Sen = %f\n", sen_global_sum);
-        printf("Total Cos = %f\n", cos_global_sum);
+        
+        printf("-------------------------\n");
+        printf("Prova Real Sin: %.18f\n", sin(angle));
+        printf("Total Sen = %0.18f\n", sen_global_sum);
+        printf("Erro (Real - Taylor): %.18f\n", sin(angle) - sen_global_sum);
+        
+        printf("-------------------------\n");
+        printf("Prova Real Cos: %.18f\n", cos(angle));
+        printf("Total Cos = %0.18f\n", cos_global_sum);
+        printf("Erro (Real - Taylor): %.18f\n", cos(angle) - cos_global_sum);
+
+        printf("-------------------------\n");
+        printf("Tangente  = %0.18f\n", sen_global_sum/cos_global_sum);
+        printf("Prova Real Tan: %.18f\n", tan(angle));
+        printf("Erro (Real - Taylor): %.18f\n", tan(angle) - (sen_global_sum/cos_global_sum));
     }
 
     MPI_Barrier(MPI_COMM_WORLD);
